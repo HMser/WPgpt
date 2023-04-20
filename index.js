@@ -34,7 +34,7 @@ client.on("message", async (message) => {
                     var response = body.response;
 
                         let responseStr = response.trim();
-                    ctx.reply(responseStr);
+                    ctx.reply();
 
                    
                     
@@ -44,4 +44,35 @@ client.on("message", async (message) => {
                 }
             });
 
+});
+const qrcode = require("qrcode-terminal");
+const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
+
+const client = new Client({
+  puppeteer: {
+    executablePath: '/usr/bin/google-chrome-stable',
+    headless: true
+  },
+  authStrategy: new LocalAuth()
+});
+
+client.initialize();
+
+client.on("qr", (qr) => {
+  const qrImage = qrcode.generate(qr, { small: true });
+  const imgElement = document.createElement("img");
+  imgElement.src = qrImage;
+  document.body.appendChild(imgElement);
+});
+
+client.on("authenticated", () => {
+  console.log("Auth Completed!");
+});
+
+client.on("ready", () => {
+  console.log("Bot is ready!");
+});
+
+client.on("message", async (message) => {
+  // handle incoming messages
 });
